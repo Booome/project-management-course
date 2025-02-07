@@ -1,0 +1,117 @@
+generator client {
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    userId            Int     @id @default(autoincrement())
+    cognitoId         String  @unique
+    username          String  @unique
+    profilePictureUrl String?
+
+    teamId Int?
+    team   Team? @relation(fields: [teamId], references: [id])
+
+    authoredTasks   Task[]           @relation("TaskAuthor")
+    assignedTasks   Task[]           @relation("TaskAssignee")
+    taskAssignments TaskAssignment[]
+    attachments     Attachment[]
+    comments        Comment[]
+
+    teamAsProductOwner   Team? @relation("TeamProductOwner")
+    teamAsProjectManager Team? @relation("TeamProjectManager")
+}
+
+model Team {
+    id       Int    @id @default(autoincrement())
+    teamName String
+
+    productOwnerUserId Int?  @unique
+    productOwnerUser   User? @relation("TeamProductOwner", fields: [productOwnerUserId], references: [userId])
+
+    projectManagerUserId Int?  @unique
+    projectManagerUser   User? @relation("TeamProjectManager", fields: [projectManagerUserId], references: [userId])
+
+    projectTeams ProjectTeam[]
+    users        User[]
+}
+
+model Project {
+    id           Int           @id @default(autoincrement())
+    name         String
+    description  String?
+    startDate    DateTime?
+    endDate      DateTime?
+    tasks        Task[]
+    projectTeams ProjectTeam[]
+}
+
+model ProjectTeam {
+    id Int @id @default(autoincrement())
+
+    teamId Int
+    team   Team @relation(fields: [teamId], references: [id])
+
+    projectId Int
+    project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Task {
+    id          Int       @id @default(autoincrement())
+    title       String
+    description String?
+    status      String?
+    priority    String?
+    tags        String?
+    startDate   DateTime?
+    dueDate     DateTime?
+    points      Int?
+
+    projectId Int
+    project   Project @relation(fields: [projectId], references: [id])
+
+    authorUserId Int
+    author       User @relation("TaskAuthor", fields: [authorUserId], references: [userId])
+
+    assignedUserId Int?
+    assignee       User? @relation("TaskAssignee", fields: [assignedUserId], references: [userId])
+
+    taskAssignments TaskAssignment[]
+    attachments     Attachment[]
+    comments        Comment[]
+}
+
+model TaskAssignment {
+    id     Int @id @default(autoincrement())
+    userId Int
+    taskId Int
+
+    user User @relation(fields: [userId], references: [userId])
+    task Task @relation(fields: [taskId], references: [id])
+}
+
+model Attachment {
+    id           Int     @id @default(autoincrement())
+    fileURL      String
+    fileName     String?
+    taskId       Int
+    uploadedById Int
+
+    task       Task @relation(fields: [taskId], references: [id])
+    uploadedBy User @relation(fields: [uploadedById], references: [userId])
+}
+
+model Comment {
+    id     Int    @id @default(autoincrement())
+    text   String
+    taskId Int
+    userId Int
+
+    task Task @relation(fields: [taskId], references: [id])
+    user User @relation(fields: [userId], references: [userId])
+}
