@@ -1,5 +1,6 @@
 import { AppStateProvider } from "@/components/AppStateProvider";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { SessionProvider } from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
@@ -37,9 +38,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AppStateProvider>
-            <DashboardLayout>{children}</DashboardLayout>
-          </AppStateProvider>
+          <SessionProvider>
+            <AppStateProvider>
+              <DashboardLayout>{children}</DashboardLayout>
+            </AppStateProvider>
+          </SessionProvider>
         </ThemeProvider>
         <Toaster />
       </body>

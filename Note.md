@@ -12,3 +12,6 @@ SELECT setval(
 	false
 )
 FROM "Project";
+
+# Generate auth secret then getToken() works
+npx auth secret

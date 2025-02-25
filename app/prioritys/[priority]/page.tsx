@@ -12,8 +12,8 @@ import { List, Table } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export default function Page() {
-  const { priority: priorityParam } = useParams();
-  const priority = capitalCase(priorityParam as string) as TaskPriority;
+  const { priority: priorityParam } = useParams() as { priority: string };
+  const priority = capitalCase(priorityParam) as TaskPriority;
   const userId = 1;
 
   const {
