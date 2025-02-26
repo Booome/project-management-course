@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 
 class PrismaClientSingleton {
-  private static instance: PrismaClient;
+  private static instance: PrismaClient | undefined;
 
   private constructor() {}
 
-  public static getInstance(): PrismaClient {
+  public static getInstance(): PrismaClient | undefined {
     if (!PrismaClientSingleton.instance) {
       PrismaClientSingleton.instance = new PrismaClient();
     }
@@ -13,4 +13,4 @@ class PrismaClientSingleton {
   }
 }
 
-export const prismaClient = PrismaClientSingleton.getInstance();
+const prismaClient = PrismaClientSingleton.getInstance();

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prismaClient } from "../prismaClient";
+import { createPrismaClient } from "../awsApi";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
   if (!query) {
     return NextResponse.json({ error: "Query is required" }, { status: 400 });
   }
+
+  const prismaClient = await createPrismaClient(request);
 
   try {
     const projects = await prismaClient.project.findMany({

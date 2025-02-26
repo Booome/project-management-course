@@ -4,6 +4,7 @@ import { TaskListView } from "@/components/ListView";
 import { NewTaskButton } from "@/components/NewTask/Button";
 import { TabsList, TabsTrigger } from "@/components/Tab";
 import { TaskTableView } from "@/components/TableView";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { TaskPriority } from "@/lib/types";
 import { useGetTasksQuery } from "@/redux/api";
@@ -14,7 +15,7 @@ import { useParams } from "next/navigation";
 export default function Page() {
   const { priority: priorityParam } = useParams() as { priority: string };
   const priority = capitalCase(priorityParam) as TaskPriority;
-  const userId = 1;
+  const containerClassName = "flex flex-col gap-4 px-4 py-8";
 
   const {
     data: tasks,
@@ -46,17 +47,13 @@ export default function Page() {
   });
 
   if (!priority) {
-    return <div>Priority is required</div>;
-  }
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (isError) {
-    return <div>Error: {JSON.stringify(error)}</div>;
+    return (
+      <Skeleton className={containerClassName}>Priority is required</Skeleton>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-8">
+    <div className={containerClassName}>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{priority} Tasks</h1>
         <NewTaskButton />
@@ -70,12 +67,22 @@ export default function Page() {
           </div>
         </TabsList>
 
-        <TabsContent value="list" className="py-2">
-          <TaskListView tasks={tasks ?? []} />
-        </TabsContent>
-        <TabsContent value="table" className="py-2">
-          <TaskTableView tasks={tasks ?? []} />
-        </TabsContent>
+        {isLoading && <Skeleton className="py-2">Loading...</Skeleton>}
+
+        {isError && (
+          <Skeleton className="py-2">Error: {JSON.stringify(error)}</Skeleton>
+        )}
+
+        {!isLoading && !isError && (
+          <>
+            <TabsContent value="list" className="py-2">
+              <TaskListView tasks={tasks ?? []} />
+            </TabsContent>
+            <TabsContent value="table" className="py-2">
+              <TaskTableView tasks={tasks ?? []} />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </div>
   );

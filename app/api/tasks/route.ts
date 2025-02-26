@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prismaClient } from "../prismaClient";
+import { createPrismaClient } from "../awsApi";
 
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const param = url.searchParams.get("param");
 
-    console.log(param);
-
+    const prismaClient = await createPrismaClient(request);
     const tasks = await prismaClient.task.findMany(
       param ? JSON.parse(param) : {},
     );
@@ -37,6 +36,7 @@ export async function POST(request: NextRequest) {
       assignedUserId,
     } = await request.json();
 
+    const prismaClient = await createPrismaClient(request);
     const task = await prismaClient.task.create({
       data: {
         title,

@@ -1,8 +1,10 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { Task } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { useGetTasksQuery } from "@/redux/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-export function YourTasks() {
+export function YourTasks({ className }: { className?: string }) {
   const {
     data: tasks,
     isError,
@@ -13,12 +15,20 @@ export function YourTasks() {
       authorUserId: 1,
     },
   });
+  const containerClassName = cn(
+    "flex h-64 w-full flex-col gap-2 rounded-lg border border-border bg-foreground/5 p-4 shadow-md",
+    className,
+  );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Skeleton className={containerClassName}>Loading...</Skeleton>;
   }
   if (isError) {
-    return <div>Error: {JSON.stringify(error)}</div>;
+    return (
+      <Skeleton className={containerClassName}>
+        Error: {JSON.stringify(error)}
+      </Skeleton>
+    );
   }
 
   const columns: GridColDef<Task>[] = [

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prismaClient } from "../../prismaClient";
+import { createPrismaClient } from "../../awsApi";
 
 export async function PATCH(
   request: NextRequest,
@@ -9,6 +9,7 @@ export async function PATCH(
     const data = await request.json();
     const { taskId } = await params;
 
+    const prismaClient = await createPrismaClient(request);
     const task = await prismaClient.task.update({
       where: { id: parseInt(taskId) },
       data,

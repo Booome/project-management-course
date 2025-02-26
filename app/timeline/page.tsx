@@ -8,21 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { useGetProjectsQuery } from "@/redux/api";
 import { DisplayOption, Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import { useMemo, useState } from "react";
 
-export default function TimelinePage() {
-  const {
-    data: projects,
-    error,
-    isLoading: isProjectsLoading,
-  } = useGetProjectsQuery();
+export default function TimelinePage({ className }: { className?: string }) {
+  const { data: projects, error, isLoading } = useGetProjectsQuery();
   const [displayOptions, setDisplayOptions] = useState<DisplayOption>({
     viewMode: ViewMode.Day,
     locale: "en-US",
   });
+  const containerClassName = cn("flex flex-col gap-4 px-4 py-6", className);
 
   const ganttProjects = useMemo(
     () =>
@@ -37,15 +36,6 @@ export default function TimelinePage() {
       })) ?? [],
     [projects],
   );
-
-  if (isProjectsLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return (
-      <div>Error occurred while fetching tasks: {JSON.stringify(error)}</div>
-    );
-  }
 
   const handleViewModeChange = (value: ViewMode) => {
     setDisplayOptions({ ...displayOptions, viewMode: value });
@@ -68,16 +58,28 @@ export default function TimelinePage() {
         </Select>
       </div>
 
-      <div className="gantt mt-4 w-full overflow-x-auto whitespace-nowrap lg:overflow-hidden">
-        <div className="h-max w-max lg:h-full lg:w-full">
-          {/* TODO: Remove this slice */}
-          <Gantt
-            {...displayOptions}
-            tasks={ganttProjects.slice(0, 10)}
-            listCellWidth="100px"
-          />
+      {isLoading && (
+        <Skeleton className={containerClassName}>Loading...</Skeleton>
+      )}
+
+      {error && (
+        <Skeleton className={containerClassName}>
+          Error occurred while fetching tasks: {JSON.stringify(error)}
+        </Skeleton>
+      )}
+
+      {!isLoading && !error && (
+        <div className="gantt mt-4 w-full overflow-x-auto whitespace-nowrap lg:overflow-hidden">
+          <div className="h-max w-max lg:h-full lg:w-full">
+            {/* TODO: Remove this slice */}
+            <Gantt
+              {...displayOptions}
+              tasks={ganttProjects.slice(0, 10)}
+              listCellWidth="100px"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <NewProjectButton />
     </div>

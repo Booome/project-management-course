@@ -11,7 +11,7 @@ import { SidebarLink } from "./SidebarLink";
 const navLinks = [
   {
     label: "Home",
-    href: "/",
+    href: "/home",
     icon: HomeIcon,
   },
   {

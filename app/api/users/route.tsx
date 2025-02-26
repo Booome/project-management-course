@@ -1,8 +1,9 @@
-import { prismaClient } from "@/app/api/prismaClient";
 import { NextRequest, NextResponse } from "next/server";
+import { createPrismaClient } from "../awsApi";
 
 export async function GET(request: NextRequest) {
   try {
+    const prismaClient = await createPrismaClient(request);
     const users = await prismaClient.user.findMany({
       include: {
         team: true,
