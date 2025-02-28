@@ -69,7 +69,7 @@ export default function Page() {
   );
 }
 
-export function SearchHeader({ title }: { title: string }) {
+function SearchHeader({ title }: { title: string }) {
   return (
     <h2 className="rounded-lg border-l-8 border-primary bg-foreground/5 p-2 px-4 text-lg font-bold">
       {title}:

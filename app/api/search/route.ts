@@ -42,7 +42,12 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ projects, tasks, users });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to search" }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      {
+        error: `Failed to search: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      },
+      { status: 500 },
+    );
   }
 }

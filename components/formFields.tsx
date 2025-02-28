@@ -1,4 +1,5 @@
 import { capitalCase } from "change-case";
+import { Control, FieldValues } from "react-hook-form";
 import { DatePicker } from "./DatePicker";
 import {
   FormControl,
@@ -23,14 +24,14 @@ export function FormInputField({
   label,
   type = "text",
 }: {
-  control: any;
+  control: unknown;
   name: string;
   label?: string;
   type?: "text" | "number";
 }) {
   return (
     <FormField
-      control={control}
+      control={control as Control<FieldValues>}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">
@@ -60,12 +61,12 @@ export function FormTextareaField({
   control,
   name,
 }: {
-  control: any;
+  control: unknown;
   name: string;
 }) {
   return (
     <FormField
-      control={control}
+      control={control as Control<FieldValues>}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">
@@ -85,13 +86,13 @@ export function FormSelectField({
   name,
   options,
 }: {
-  control: any;
+  control: unknown;
   name: string;
   options: string[];
 }) {
   return (
     <FormField
-      control={control}
+      control={control as Control<FieldValues>}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">
@@ -130,12 +131,12 @@ export function FormDateField({
   control,
   name,
 }: {
-  control: any;
+  control: unknown;
   name: string;
 }) {
   return (
     <FormField
-      control={control}
+      control={control as Control<FieldValues>}
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">

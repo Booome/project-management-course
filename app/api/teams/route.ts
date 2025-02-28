@@ -12,9 +12,11 @@ export async function GET(request: NextRequest) {
       },
     });
     return NextResponse.json(teams);
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: `Failed to fetch teams: ${error.message}` },
+      {
+        message: `Failed to fetch teams: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      },
       { status: 500 },
     );
   }

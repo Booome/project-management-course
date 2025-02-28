@@ -16,9 +16,11 @@ export async function PATCH(
     });
 
     return NextResponse.json(task);
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: `Failed to update task: ${error.message}` },
+      {
+        message: `Failed to update task: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      },
       { status: 500 },
     );
   }

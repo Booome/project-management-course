@@ -53,7 +53,7 @@ function TaskGroupHeader({
   status: TaskStatus;
   tasksCount: number;
 }) {
-  const statusBorderClasses: any = {
+  const statusBorderClasses: Record<TaskStatus, string> = {
     [TaskStatus.ToDo]: "border-blue-600",
     [TaskStatus.WorkInProgress]: "border-emerald-600",
     [TaskStatus.UnderReview]: "border-amber-600",

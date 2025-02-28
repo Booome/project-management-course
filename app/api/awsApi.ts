@@ -9,7 +9,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 
 export async function createPrismaClient(request: NextRequest) {
-  let token = await getToken({ req: request });
+  const token = await getToken({ req: request });
 
   const cognitoClient = new CognitoIdentityClient({
     region: process.env.AWS_REGION,

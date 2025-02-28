@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
     const projects = await prismaClient.project.findMany();
 
     return NextResponse.json(projects);
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
       {
-        message: `Failed to fetch projects: ${error.message}`,
+        message: `Failed to fetch projects: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       },
       { status: 500 },
     );
@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
       data: { name, description, startDate, endDate },
     });
     return NextResponse.json(project, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
       {
-        message: `Failed to create project: ${error.message}`,
+        message: `Failed to create project: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       },
       { status: 500 },
     );

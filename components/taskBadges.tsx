@@ -9,7 +9,7 @@ export function TaskStatusBadge({
   status: TaskStatus;
   className?: string;
 }) {
-  const statusClasses: any = {
+  const statusClasses: Record<TaskStatus, string> = {
     [TaskStatus.ToDo]: "bg-red-200 text-red-700",
     [TaskStatus.WorkInProgress]: "bg-yellow-200 text-yellow-700",
     [TaskStatus.UnderReview]: "bg-blue-200 text-blue-700",
@@ -24,7 +24,7 @@ export function TaskStatusBadge({
 }
 
 export function TaskPriorityBadge({ priority }: { priority: TaskPriority }) {
-  const priorityClasses: any = {
+  const priorityClasses: Record<TaskPriority, string> = {
     [TaskPriority.Urgent]: "bg-red-200 text-red-700",
     [TaskPriority.High]: "bg-yellow-200 text-yellow-700",
     [TaskPriority.Medium]: "bg-green-200 text-green-700",
